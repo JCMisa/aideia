@@ -8,6 +8,7 @@ import {
 
 export const Users = pgTable("users", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  clerkId: varchar("clerkId", { length: 255 }).notNull().unique(),
   name: varchar({ length: 255 }).notNull(),
   email: varchar({ length: 255 }).notNull().unique(),
   image: text("image"),

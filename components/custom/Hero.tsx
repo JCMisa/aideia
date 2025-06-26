@@ -39,7 +39,7 @@ export function Hero() {
   ];
   return (
     <div className="relative mx-auto flex h-screen w-full flex-col items-center justify-center overflow-hidden rounded-3xl">
-      <div className="mx-auto z-20 max-w-4xl text-center text-2xl font-bold text-balance text-foreground md:text-4xl lg:text-6xl tracking-tight">
+      <div className="mx-auto z-20 max-w-4xl text-center text-2xl font-bold text-balance text-foreground md:text-4xl lg:text-6xl tracking-tight flex flex-col items-center">
         Where every health
         <PointerHighlight
           rectangleClassName="bg-neutral-200 dark:bg-neutral-700 border-neutral-300 dark:border-neutral-600"

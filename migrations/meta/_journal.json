@@ -8,6 +8,13 @@
       "when": 1750918256169,
       "tag": "0000_lyrical_squirrel_girl",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1750926973297,
+      "tag": "0001_premium_tinkerer",
+      "breakpoints": true
     }
   ]
 }
