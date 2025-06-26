@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Aideai",
+  title: "Aidea",
   description: "An AI Medical Voice Agent Assistant",
 };
 
