@@ -1,4 +1,5 @@
 "use client";
+
 import {
   Navbar,
   NavBody,
@@ -12,6 +13,7 @@ import {
 } from "@/components/ui/resizable-navbar";
 import { useState } from "react";
 import ModeToggle from "./ModeToggle";
+import { UserButton, useUser } from "@clerk/nextjs";
 
 export function NavbarComponent() {
   const navItems = [
@@ -29,6 +31,8 @@ export function NavbarComponent() {
     },
   ];
 
+  const { user } = useUser();
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
@@ -40,8 +44,18 @@ export function NavbarComponent() {
           <NavItems items={navItems} />
           <div className="flex items-center gap-4">
             <ModeToggle />
-            <NavbarButton variant="secondary">Signin</NavbarButton>
-            <NavbarButton variant="primary">Signup</NavbarButton>
+            {user ? (
+              <UserButton />
+            ) : (
+              <>
+                <NavbarButton variant="secondary" href="/sign-in">
+                  Signin
+                </NavbarButton>
+                <NavbarButton variant="primary" href="/sign-up">
+                  Signup
+                </NavbarButton>
+              </>
+            )}
           </div>
         </NavBody>
 
@@ -69,22 +83,28 @@ export function NavbarComponent() {
                 <span className="block">{item.name}</span>
               </a>
             ))}
-            <div className="flex w-full flex-col gap-4">
-              <NavbarButton
-                onClick={() => setIsMobileMenuOpen(false)}
-                variant="primary"
-                className="w-full"
-              >
-                Login
-              </NavbarButton>
-              <NavbarButton
-                onClick={() => setIsMobileMenuOpen(false)}
-                variant="primary"
-                className="w-full"
-              >
-                Book a call
-              </NavbarButton>
-            </div>
+            {user ? (
+              <UserButton />
+            ) : (
+              <div className="flex w-full flex-col gap-4">
+                <NavbarButton
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  variant="primary"
+                  className="w-full"
+                  href="/sign-in"
+                >
+                  Signin
+                </NavbarButton>
+                <NavbarButton
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  variant="primary"
+                  className="w-full"
+                  href="/sign-up"
+                >
+                  Signup
+                </NavbarButton>
+              </div>
+            )}
           </MobileNavMenu>
         </MobileNav>
       </Navbar>
