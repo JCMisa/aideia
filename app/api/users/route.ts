@@ -19,18 +19,22 @@ export async function POST() {
 
     // if not exist, add to database
     if (users.length === 0) {
-      await db.insert(Users).values({
+      const now = new Date();
+      const newUser = {
         clerkId: user.id,
         name: user.fullName || user.firstName || "Unknown",
         email: user.primaryEmailAddress?.emailAddress || "",
         image: user.imageUrl || null,
         credits: 0,
         role: "user",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      });
+        createdAt: now,
+        updatedAt: now,
+      };
 
-      return NextResponse.json({ user: { clerkId: user.id } }, { status: 201 });
+      await db.insert(Users).values(newUser);
+
+      // Return the user instance itself
+      return NextResponse.json({ user: newUser }, { status: 201 });
     }
 
     return NextResponse.json({ user: users[0] || null }, { status: 200 });

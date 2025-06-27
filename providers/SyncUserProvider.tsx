@@ -4,6 +4,10 @@ import { ReactNode, useEffect, useState } from "react";
 import axios, { AxiosError } from "axios";
 import { toast } from "sonner";
 import { useUser } from "@clerk/nextjs";
+import {
+  UserDetailContext,
+  UserDetailContextType,
+} from "@/context/UserDetailContext";
 
 // Define the maximum number of retries for the sync operation.
 const MAX_RETRIES = 3;
@@ -20,6 +24,8 @@ const SyncUserProvider = ({ children }: Readonly<{ children: ReactNode }>) => {
   const [isLoading, setIsLoading] = useState(true);
   // State to store any error message if the sync fails.
   const [syncError, setSyncError] = useState<string | null>(null);
+  // State to store user details from a context for shared access.
+  const [userDetails, setUserDetails] = useState<UserType | null>(null);
 
   // This useEffect hook sets isMounted to true, but only on the client.
   // On the server, this hook never runs, so isMounted remains false.
@@ -47,6 +53,11 @@ const SyncUserProvider = ({ children }: Readonly<{ children: ReactNode }>) => {
         const result = await axios.post("/api/users", {});
 
         if (!isSubscribed) return;
+
+        // Set user details from the API response
+        if (result.data && result.data.user) {
+          setUserDetails(result.data.user);
+        }
 
         // On successful creation of a new user, show a success toast.
         if (result.status === 201) {
@@ -100,6 +111,7 @@ const SyncUserProvider = ({ children }: Readonly<{ children: ReactNode }>) => {
       }
     }
 
+    // Cleanup function to prevent state updates if the component unmounts.
     return () => {
       isSubscribed = false;
     };
@@ -152,7 +164,12 @@ const SyncUserProvider = ({ children }: Readonly<{ children: ReactNode }>) => {
   }
 
   // If sync is successful (or not needed), render the children components.
-  return <>{children}</>;
+  const contextValue: UserDetailContextType = { userDetails, setUserDetails };
+  return (
+    <UserDetailContext.Provider value={contextValue}>
+      {children}
+    </UserDetailContext.Provider>
+  );
 };
 
 export default SyncUserProvider;
