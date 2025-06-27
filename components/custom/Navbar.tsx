@@ -14,23 +14,13 @@ import {
 import { useState } from "react";
 import ModeToggle from "./ModeToggle";
 import { UserButton, useUser } from "@clerk/nextjs";
+import { navItemsHome } from "@/constants";
 
-export function NavbarComponent() {
-  const navItems = [
-    {
-      name: "Features",
-      link: "#features",
-    },
-    {
-      name: "Pricing",
-      link: "#pricing",
-    },
-    {
-      name: "Contact",
-      link: "#contact",
-    },
-  ];
-
+export function NavbarComponent({
+  navItems = navItemsHome,
+}: {
+  navItems?: { name: string; link: string }[];
+}) {
   const { user } = useUser();
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);

@@ -1,7 +1,7 @@
 "use client";
 import { ThreeDMarquee } from "@/components/ui/3d-marquee";
-import { Button } from "../ui/button";
 import { PointerHighlight } from "../ui/pointer-highlight";
+import Link from "next/link";
 
 export function Hero() {
   const images = [
@@ -55,15 +55,18 @@ export function Hero() {
       </p>
 
       <div className="relative z-20 flex flex-wrap items-center justify-center gap-4 pt-4">
-        <Button className="p-2 px-5 min-w-32 max-w-32 overflow-hidden cursor-pointer">
+        <Link
+          href={"/dashboard"}
+          className="rounded-md bg-primary px-6 py-2.5 text-sm font-medium transition-colors hover:bg-primary-600 focus:ring-2 focus:ring-primary-400 focus:ring-offset-2 focus:ring-offset-black dark:focus:ring-offset-white cursor-pointer focus:outline-none min-w-40 max-w-40 text-center"
+        >
           Get Your Aid
-        </Button>
-        <Button
-          variant={"outline"}
-          className="p-2 px-5 min-w-32 max-w-32 overflow-hidden cursor-pointer"
+        </Link>
+        <Link
+          href={"/discover"}
+          className="rounded-md border border-white/20 bg-white/10 px-6 py-2.5 text-sm font-medium backdrop-blur-sm transition-colors hover:bg-white/20 focus:ring-2 focus:ring-white/20 focus:ring-offset-2 focus:ring-offset-black focus:outline-none min-w-40 max-w-40 text-center"
         >
           Discover Aidea
-        </Button>
+        </Link>
       </div>
 
       {/* overlay */}

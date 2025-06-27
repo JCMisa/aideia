@@ -8,6 +8,7 @@ import {
   useMotionValueEvent,
 } from "motion/react";
 import Image from "next/image";
+import Link from "next/link";
 
 import React, { useRef, useState } from "react";
 
@@ -230,13 +231,13 @@ export const MobileNavToggle = ({
 
 export const NavbarLogo = () => {
   return (
-    <a
-      href="#"
+    <Link
+      href="/"
       className="relative z-20 mr-4 flex items-center space-x-2 px-2 py-1 text-sm font-normal text-foreground"
     >
       <Image src="/logo.svg" alt="logo" width={30} height={30} />
       <span className="font-medium text-foreground text-lg">Aidea</span>
-    </a>
+    </Link>
   );
 };
 

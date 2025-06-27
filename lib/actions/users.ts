@@ -20,5 +20,10 @@ export const getCurrentUser = withErrorHandling(async () => {
     .select()
     .from(Users)
     .where(eq(Users.clerkId, await getSessionUserId()));
+
+  if (data.length === 0) {
+    throw new Error("User not found");
+  }
+
   return data[0];
 });
