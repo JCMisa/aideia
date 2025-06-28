@@ -21,3 +21,14 @@ declare interface ConsultationType {
   conditionSeverity: string;
   createdAt: Date;
 }
+
+declare interface DoctorType {
+  id: number;
+  name: string;
+  specialist: string;
+  image: string;
+  description: string;
+  agentPrompt: string;
+  voiceId: string;
+  subscriptionRequired: boolean;
+}

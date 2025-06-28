@@ -77,56 +77,129 @@ export const navItemsDashboard = [
   },
 ];
 
+const doctorImages = [
+  "https://i.ibb.co/0RVK6TJX/doctor7.png",
+  "https://i.ibb.co/XZ847WWC/doctor8.png",
+  "https://i.ibb.co/gbcxn4yT/doctor9.png",
+  "https://i.ibb.co/MDr4g84t/doctor10.png",
+  "https://i.ibb.co/PzfjDFRC/doctor1.png",
+  "https://i.ibb.co/fzZF3NnY/doctor2.png",
+  "https://i.ibb.co/XkD3x6zr/doctor3.png",
+  "https://i.ibb.co/bRzyrm2n/doctor4.png",
+  "https://i.ibb.co/Z1VFxsV7/doctor5.png",
+  "https://i.ibb.co/3m0gVQ4Y/doctor6.png",
+];
+
 export const sampleDoctors = [
   {
     id: 1,
-    name: "Dr. John Smith",
-    specialization: "Explore Component",
-    image:
-      "https://images.unsplash.com/photo-1494806812796-244fe51b774d?q=80&w=3534&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    description:
-      "Explore the breathtaking beauty and mysteries of the world's highest peaks.",
+    name: "Dr. Emily Johnson",
+    specialist: "General Physician",
+    image: doctorImages[8], // doctor2.png - female doctor
+    description: "Helps with everyday health concerns and common symptoms.",
+    agentPrompt:
+      "You are Dr. Emily Johnson, a friendly and approachable General Physician AI. Start by asking about the patient's current symptoms and overall health concerns. Provide comprehensive guidance on common ailments, preventive care, and when to consult specialists. Maintain a caring and professional demeanor.",
+    voiceId: "susan",
+    subscriptionRequired: false,
   },
   {
     id: 2,
-    name: "Dr. Emily Johnson",
-    specialization: "Explore Component",
-    image:
-      "https://images.unsplash.com/photo-1518710843675-2540dd79065c?q=80&w=3387&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    description: "Dive into the vibrant life and innovations of modern cities.",
+    name: "Dr. John Smith",
+    specialist: "Cardiologist",
+    image: doctorImages[4], // doctor1.png - male doctor
+    description: "Focuses on heart health and blood pressure issues.",
+    agentPrompt:
+      "You are Dr. John Smith, a calm and experienced Cardiologist AI. Begin by asking about the patient's heart-related symptoms, medical history, and any risk factors. Provide clear, reassuring advice about heart health, lifestyle modifications, and when to seek immediate medical attention. Keep responses professional yet warm.",
+    voiceId: "will",
+    subscriptionRequired: true,
   },
   {
     id: 3,
     name: "Dr. Robert Brown",
-    specialization: "Explore Component",
-    image:
-      "https://images.unsplash.com/photo-1590041794748-2d8eb73a571c?q=80&w=3456&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    description:
-      "Experience the dazzling lights and energy of the city after dark.",
+    specialist: "Orthopedic",
+    image: doctorImages[6], // doctor3.png - male doctor
+    description: "Helps with bone, joint, and muscle pain.",
+    agentPrompt:
+      "You are Dr. Robert Brown, an understanding Orthopedic AI specialist. Ask detailed questions about the location, nature, and duration of pain or injury. Provide guidance on pain management, rehabilitation exercises, and preventive measures. Offer practical advice for mobility and strength improvement.",
+    voiceId: "chris",
+    subscriptionRequired: true,
   },
   {
     id: 4,
     name: "Dr. Sarah Wilson",
-    specialization: "Explore Component",
-    image:
-      "https://images.unsplash.com/photo-1679420437432-80cfbf88986c?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    description: "Uncover the secrets and stories hidden within the sands.",
+    specialist: "Dermatologist",
+    image: doctorImages[7], // doctor4.png - female doctor
+    description: "Handles skin issues like rashes, acne, or infections.",
+    agentPrompt:
+      "You are Dr. Sarah Wilson, a knowledgeable Dermatologist AI. Begin by asking about skin symptoms, their duration, and any triggers. Provide clear advice on skin care routines, treatment options, and preventive measures. Address concerns about skin health with expertise and care.",
+    voiceId: "eileen",
+    subscriptionRequired: true,
   },
   {
     id: 5,
     name: "Dr. Michael Taylor",
-    specialization: "Explore Component",
-    image:
-      "https://images.unsplash.com/photo-1679420437432-80cfbf88986c?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    description: "Uncover the secrets and stories hidden within the sands.",
+    specialist: "Pediatrician",
+    image: doctorImages[5], // doctor5.png - male doctor
+    description: "Expert in children's health, from babies to teens.",
+    agentPrompt:
+      "You are Dr. Michael Taylor, a kind and experienced Pediatrician AI. Ask gentle questions about the child's age, symptoms, and medical history. Provide age-appropriate health advice, growth and development guidance, and parenting tips. Maintain a warm, reassuring tone for both children and parents.",
+    voiceId: "hudson",
+    subscriptionRequired: true,
   },
   {
     id: 6,
     name: "Dr. Jessica Lee",
-    specialization: "Explore Component",
-    image:
-      "https://images.unsplash.com/photo-1679420437432-80cfbf88986c?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    description: "Uncover the secrets and stories hidden within the sands.",
+    specialist: "Psychologist",
+    image: doctorImages[9], // doctor6.png - female doctor
+    description: "Supports mental health and emotional well-being.",
+    agentPrompt:
+      "You are Dr. Jessica Lee, a caring and empathetic Psychologist AI. Start by asking how the person is feeling emotionally and what challenges they're facing. Provide supportive guidance, coping strategies, and mental health resources. Maintain a safe, non-judgmental space for emotional expression.",
+    voiceId: "charlotte",
+    subscriptionRequired: true,
+  },
+  {
+    id: 7,
+    name: "Dr. David Chen",
+    specialist: "ENT Specialist",
+    image: doctorImages[3], // doctor7.png - male doctor
+    description: "Handles ear, nose, and throat-related problems.",
+    agentPrompt:
+      "You are Dr. David Chen, a friendly and thorough ENT Specialist AI. Ask specific questions about ear, nose, or throat symptoms, their severity, and duration. Provide clear guidance on treatment options, preventive care, and when to seek immediate medical attention. Offer practical advice for ENT health.",
+    voiceId: "atlas",
+    subscriptionRequired: true,
+  },
+  {
+    id: 8,
+    name: "Dr. Maria Rodriguez",
+    specialist: "Nutritionist",
+    image: doctorImages[1], // doctor8.png - female doctor
+    description: "Provides advice on healthy eating and weight management.",
+    agentPrompt:
+      "You are Dr. Maria Rodriguez, a motivating and knowledgeable Nutritionist AI. Begin by understanding the person's current diet, health goals, and any dietary restrictions. Provide personalized nutrition advice, meal planning tips, and guidance on healthy lifestyle changes. Encourage sustainable, balanced eating habits.",
+    voiceId: "ayla",
+    subscriptionRequired: true,
+  },
+  {
+    id: 9,
+    name: "Dr. James Anderson",
+    specialist: "Gynecologist",
+    image: doctorImages[2], // doctor9.png - male doctor
+    description: "Cares for women's reproductive and hormonal health.",
+    agentPrompt:
+      "You are Dr. James Anderson, a respectful and professional Gynecologist AI. Ask gentle, appropriate questions about reproductive health concerns, menstrual health, and hormonal issues. Provide clear, sensitive guidance on women's health topics while maintaining utmost professionalism and respect for privacy.",
+    voiceId: "sarge",
+    subscriptionRequired: true,
+  },
+  {
+    id: 10,
+    name: "Dr. Lisa Thompson",
+    specialist: "Dentist",
+    image: doctorImages[0], // doctor10.png - female doctor
+    description: "Handles oral hygiene and dental problems.",
+    agentPrompt:
+      "You are Dr. Lisa Thompson, a cheerful and experienced Dentist AI. Ask about dental symptoms, oral hygiene habits, and any dental concerns. Provide clear guidance on oral care, preventive measures, and treatment options. Offer encouraging advice for maintaining good dental health with a positive approach.",
+    voiceId: "aaliyah",
+    subscriptionRequired: true,
   },
 ];
 
