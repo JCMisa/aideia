@@ -14,6 +14,8 @@ import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
 import { ArrowRightIcon, Loader2 } from "lucide-react";
 import { useState, useCallback, useMemo, useTransition } from "react";
+import axios from "axios";
+import { toast } from "sonner";
 
 const AddConsultationDialog = () => {
   const [note, setNote] = useState<string>("");
@@ -42,16 +44,56 @@ const AddConsultationDialog = () => {
   const handleSubmit = useCallback(() => {
     if (!isNoteValid) return;
 
-    startTransition(() => {
-      // Simulate API call or form processing
-      console.log("Processing consultation note:", note);
-      // Add your actual form submission logic here
+    startTransition(async () => {
+      try {
+        // Show loading state immediately
+        const result = await axios.post(
+          "/api/suggest-doctors",
+          {
+            notes: note.trim(), // Trim whitespace for cleaner data
+          },
+          {
+            timeout: 30000, // 30 second timeout before aborting api call
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
-      // Close dialog after successful submission
-      setTimeout(() => {
-        setIsOpen(false);
-        setNote(""); // Reset form
-      }, 1000);
+        // Handle successful response
+        if (result.status === 200 && result.data) {
+          console.log("Result: ", result.data);
+          toast.success("Doctors suggested successfully!");
+
+          // Close dialog and reset form immediately for better UX
+          setIsOpen(false);
+          setNote("");
+        } else {
+          throw new Error("Invalid response format");
+        }
+      } catch (error) {
+        console.error("API Error:", error);
+
+        // Handle different types of errors
+        if (axios.isAxiosError(error)) {
+          if (error.code === "ECONNABORTED") {
+            toast.error("Request timed out. Please try again.");
+            console.error("Request timed out");
+          } else if (error.response?.status === 400) {
+            toast.error("Invalid input. Please check your notes.");
+            console.error("Bad request:", error.response.data);
+          } else if (error.response?.status === 500) {
+            toast.error("Server error. Please try again later.");
+            console.error("Server error:", error.response.data);
+          } else {
+            toast.error("An unexpected error occurred. Please try again.");
+            console.error("Unexpected error:", error.message);
+          }
+        } else {
+          toast.error("Network error. Please check your connection.");
+          console.error("Network error:", error);
+        }
+      }
     });
   }, [note, isNoteValid]);
 
