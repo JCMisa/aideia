@@ -32,3 +32,19 @@ declare interface DoctorType {
   voiceId: string;
   subscriptionRequired: boolean;
 }
+
+declare interface SuggestedDoctorType {
+  doctor: DoctorType;
+  reason: string;
+  confidence: number;
+}
+
+declare interface SessionChatType {
+  id: number;
+  sessionChatId: string;
+  createdBy: string;
+  notes: string;
+  conversation: TConversation; // Stored as JSON in the database
+  report: TReport; // Stored as JSON in the database
+  createdAt: Date;
+}

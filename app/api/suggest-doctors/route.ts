@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Try to parse the response as JSON
+    // Parsing the response as JSON
     try {
       // Extract JSON from markdown code blocks if present
       let jsonString = response;

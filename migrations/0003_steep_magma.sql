@@ -1,0 +1,1 @@
+ALTER TABLE "sessionChat" ADD COLUMN "selectedDoctor" json;

@@ -1,8 +1,11 @@
 import {
+  index,
   integer,
+  json,
   pgTable,
   text,
   timestamp,
+  uniqueIndex,
   varchar,
 } from "drizzle-orm/pg-core";
 
@@ -21,3 +24,25 @@ export const Users = pgTable("users", {
     .$defaultFn(() => /* @__PURE__ */ new Date())
     .notNull(),
 });
+
+export const SessionChat = pgTable(
+  "sessionChat",
+  {
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    sessionChatId: varchar().notNull().unique(),
+    createdBy: varchar("createdBy")
+      .notNull()
+      .references(() => Users.email, { onDelete: "cascade" }),
+    notes: text("notes"),
+    selectedDoctor: json("selectedDoctor"),
+    conversation: json("conversation"),
+    report: json("report"),
+    createdAt: timestamp("createdAt")
+      .$defaultFn(() => /* @__PURE__ */ new Date())
+      .notNull(),
+  },
+  (table) => [
+    uniqueIndex("sessionChat_sessionChatId_idx").on(table.sessionChatId),
+    index("sessionChat_createdBy_idx").on(table.createdBy),
+  ]
+);

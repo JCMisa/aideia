@@ -165,4 +165,17 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 5px;
+    background: transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: var(--primary);
+  }
+
+  .custom-scrollbar {
+    scrollbar-width: 5px;
+  }
 }
