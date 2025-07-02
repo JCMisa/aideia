@@ -43,8 +43,13 @@ declare interface SessionChatType {
   id: number;
   sessionChatId: string;
   createdBy: string;
-  notes: string;
+  notes: string | null;
+  selectedDoctor: TSelectedDoctor; // Stored as JSON in the database
   conversation: TConversation; // Stored as JSON in the database
   report: TReport; // Stored as JSON in the database
   createdAt: Date;
+}
+
+declare interface Params {
+  params: Promise<Record<string, string>>;
 }

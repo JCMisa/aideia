@@ -17,8 +17,11 @@ import { useState, useCallback, useMemo, useTransition } from "react";
 import axios from "axios";
 import { toast } from "sonner";
 import SuggestedDoctorCard from "./SuggestedDoctorCard";
+import { useRouter } from "next/navigation";
 
 const AddConsultationDialog = () => {
+  const router = useRouter();
+
   const [note, setNote] = useState<string>("");
   const [isPending, startTransition] = useTransition();
   const [isOpen, setIsOpen] = useState(false);
@@ -112,20 +115,21 @@ const AddConsultationDialog = () => {
 
     startTransition(async () => {
       try {
-        const result = await axios.post(
-          "/api/session-chat",
-          {
-            notes: note.trim(),
-            selectedDoctor,
-          },
-          { timeout: 30000, headers: { "Content-Type": "application/json" } }
-        );
+        const result: { data: SessionChatType; status: number } =
+          await axios.post(
+            "/api/session-chat",
+            {
+              notes: note.trim(),
+              selectedDoctor,
+            },
+            { timeout: 30000, headers: { "Content-Type": "application/json" } }
+          );
 
         if (result.status === 200 && result.data) {
           console.log("Session chat result: ", result.data);
           toast.success("Consultation started successfully!");
 
-          // todo: route to conversation screen
+          router.push(`/session/${result.data?.sessionChatId}`);
         } else {
           throw new Error("Unexpected response from server.");
         }
@@ -148,7 +152,7 @@ const AddConsultationDialog = () => {
         console.error("Start Consultation Error:", error);
       }
     });
-  }, [note, selectedDoctor]);
+  }, [note, selectedDoctor, router]);
 
   // Handle dialog close and form reset
   const handleClose = useCallback(() => {
