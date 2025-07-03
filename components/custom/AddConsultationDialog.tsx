@@ -92,6 +92,13 @@ const AddConsultationDialog = () => {
           } else if (error.response?.status === 400) {
             toast.error("Invalid input. Please check your notes.");
             console.error("Bad request:", error.response.data);
+          } else if (error.response?.status === 422) {
+            // Do not proceed to doctor selection if not health-related
+            setSuggestedDoctors(null);
+            toast.error(
+              error.response.data?.error ||
+                "Invalid input. Please enter a health-related topic."
+            );
           } else if (error.response?.status === 500) {
             toast.error("Server error. Please try again later.");
             console.error("Server error:", error.response.data);

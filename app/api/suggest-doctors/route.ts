@@ -14,21 +14,40 @@ export async function POST(req: NextRequest) {
   }
 
   try {
+    // Step 1: Check if the input is healthcare related
+    const { text: checkInput } = await generateText({
+      model: google("gemini-2.0-flash-001"),
+      prompt: `Given the following user input, determine if it is directly related to healthcare, medical symptoms, health conditions, or personal health notes. Respond with only 'true' if it is, and 'false' if it is not.\n\nUser input: "${notes}"\n\nIs this input related to healthcare?`,
+      temperature: 0,
+    });
+
+    console.log("Is healthcare related: ", checkInput);
+
+    if (!checkInput || checkInput.trim().toLowerCase() !== "true") {
+      return NextResponse.json(
+        {
+          error:
+            "Your notes do not appear to be related to healthcare. Please enter health-related symptoms or concerns.",
+        },
+        { status: 422 }
+      );
+    }
+
     const { text: response } = await generateText({
       model: google("gemini-2.0-flash-001"),
-      prompt: `You are a medical AI assistant that suggests appropriate doctors based on patient symptoms. 
+      prompt: `You are a medical AI assistant that suggests appropriate doctors based on patient symptoms.
           Available doctors: ${JSON.stringify(sampleDoctors)}
-          
+
           Analyze the symptoms and suggest 3-5 most appropriate doctors from the available list.
           Consider the specialist field that best matches the symptoms described.
-          
+
           Based on these symptoms/notes: "${notes}"
-          
+
           Return a JSON array with the following structure for each suggested doctor:
           {
             "doctor": {
               "id": "id",
-              "name": "name", 
+              "name": "name",
               "specialist": "specialist",
               "description": "description",
               "image": "image",
@@ -39,7 +58,7 @@ export async function POST(req: NextRequest) {
             "reason": "Detailed explanation of why this doctor is suitable for the symptoms",
             "confidence": "unique confidence level ranging from 1-5 for suggesting the specific doctor"
           }
-          
+
           Requirements:
           - Suggest exactly 3-5 doctors
           - Include ALL doctor properties from the available list (id, name, specialist, description, image, agentPrompt, voiceId, subscriptionRequired)
