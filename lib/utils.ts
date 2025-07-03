@@ -1,3 +1,4 @@
+import { CreateAssistantDTO } from "@vapi-ai/web/dist/api";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -18,4 +19,45 @@ export const withErrorHandling = <T, A extends unknown[]>(
       return errorMessage as unknown as T;
     }
   };
+};
+
+export const configureAssistant = (voiceId: string) => {
+  const vapiAssistant: CreateAssistantDTO = {
+    name: "{{ doctorName }}",
+    firstMessage: `Hello, I am {{ doctorName }}, your {{ doctorSpeciality }}. I'm here to discuss {{ topic }} and help you with your health concerns. Please tell me more about your symptoms or questions.
+    `,
+    transcriber: {
+      provider: "assembly-ai",
+      language: "en",
+    },
+    voice: {
+      provider: "vapi",
+      voiceId: voiceId as
+        | "Elliot"
+        | "Kylie"
+        | "Rohan"
+        | "Lily"
+        | "Savannah"
+        | "Hana"
+        | "Neha"
+        | "Cole"
+        | "Harry"
+        | "Paige"
+        | "Spencer",
+      speed: 1.1,
+    },
+    model: {
+      provider: "google",
+      model: "gemini-2.0-flash",
+      messages: [
+        {
+          role: "system",
+          content: `You are {{ doctorName }}, a highly qualified {{ doctorSpeciality }}.\n\n{{ doctorDescription }}\n\nYour prompt: {{ doctorPrompt }}\n\nSession Topic: {{ topic }}\n\n---\n\nAs a virtual doctor, your goal is to provide the patient with a realistic, thorough, and empathetic consultation.\n\n- Begin by greeting the patient and asking about their main symptoms or concerns related to {{ topic }}.\n- Use your expertise as a {{ doctorSpeciality }} to ask relevant follow-up questions and gather a detailed history.\n- Based on the patient's responses, provide a differential diagnosis, explaining your reasoning in clear, accessible language.\n- Offer evidence-based advice, including possible diagnoses, recommended next steps, and when appropriate, suggest over-the-counter or prescription medications.\n- Clearly explain the purpose, dosage, and precautions for any medication you recommend.\n- If symptoms suggest a serious or urgent condition, advise the patient to seek immediate in-person care and explain why.\n- Throughout the conversation, maintain a supportive, professional, and reassuring tone.\n- Encourage the patient to ask questions and confirm their understanding.\n- Conclude the session by summarizing your advice and next steps.\n\nNever provide a diagnosis or prescription outside your specialty. Always prioritize patient safety and clarity.\n\nLet's begin the consultation. Greet the patient and ask about their main concern regarding {{ topic }}.`,
+        },
+      ],
+    },
+    clientMessages: undefined,
+    serverMessages: undefined,
+  };
+  return vapiAssistant;
 };

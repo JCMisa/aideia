@@ -53,3 +53,8 @@ declare interface SessionChatType {
 declare interface Params {
   params: Promise<Record<string, string>>;
 }
+
+declare interface SavedMessage {
+  role: "user" | "system" | "assistant";
+  content: string;
+}

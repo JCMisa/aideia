@@ -29,6 +29,20 @@
       "when": 1751352143670,
       "tag": "0003_steep_magma",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1751519028003,
+      "tag": "0004_striped_junta",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1751519194892,
+      "tag": "0005_empty_mach_iv",
+      "breakpoints": true
     }
   ]
 }
