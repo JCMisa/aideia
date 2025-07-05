@@ -1,11 +1,10 @@
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { ArrowRightIcon, HeartIcon, LockKeyholeIcon } from "lucide-react";
+import { HeartIcon, LockKeyholeIcon } from "lucide-react";
 import Image from "next/image";
 
 const DoctorCard = ({ doctor }: { doctor: DoctorType }) => {
   return (
-    <div className="bg-card rounded-xl shadow-lg p-6 flex flex-col items-center w-full max-w-md min-w-full h-[340px] border border-border transition-colors duration-300 relative">
+    <div className="bg-card rounded-xl shadow-lg p-6 flex flex-col items-center w-full max-w-md min-w-full h-[340px] border border-border transition-colors duration-300">
       <div className="w-full h-40 bg-muted rounded-lg flex items-center justify-center mb-4 overflow-hidden no-scrollbar">
         {doctor.image ? (
           <Image
@@ -25,7 +24,7 @@ const DoctorCard = ({ doctor }: { doctor: DoctorType }) => {
           </div>
         )}
       </div>
-      <div className="w-full flex items-center mb-2">
+      <div className="w-full flex items-start mb-2">
         {!doctor.subscriptionRequired ? (
           <HeartIcon className="text-primary mr-2" />
         ) : (
@@ -38,14 +37,6 @@ const DoctorCard = ({ doctor }: { doctor: DoctorType }) => {
       <p className="text-muted-foreground text-sm w-full line-clamp-1 md:line-clamp-3 lg:line-clamp-1 xl:line-clamp-3">
         {doctor.description}
       </p>
-      <Button
-        size={"sm"}
-        variant={"outline"}
-        className="absolute bottom-3 right-3 cursor-pointer flex items-center gap-1"
-      >
-        Start Consultation
-        <ArrowRightIcon className="size-4" />
-      </Button>
     </div>
   );
 };

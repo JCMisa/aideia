@@ -27,3 +27,13 @@ export const getCurrentUser = withErrorHandling(async () => {
 
   return data[0];
 });
+
+export const getUserByEmail = withErrorHandling(async (email: string) => {
+  const data = await db.select().from(Users).where(eq(Users.email, email));
+
+  if (data.length === 0) {
+    throw new Error("User not found");
+  }
+
+  return data[0];
+});

@@ -79,7 +79,7 @@ const AssistantSection = ({
         if (result !== null) {
           console.log("Generated Report onCallEnd: ", result);
           toast.success("Report generated successfully!");
-          // todo: router push to a summary and report page
+          router.push(`/session/${sessionChat.sessionChatId}/report`);
         } else {
           toast.error("There is not report generated.");
         }
@@ -119,7 +119,7 @@ const AssistantSection = ({
       vapi.off("speech-start", onSpeechStart);
       vapi.off("speech-end", onSpeechEnd);
     };
-  }, [router, user?.clerkId, generateReport]);
+  }, [router, user?.clerkId, generateReport, sessionChat.sessionChatId]);
 
   // to capture voice through mic
   const toggleMicrophone = () => {

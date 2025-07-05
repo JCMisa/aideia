@@ -58,3 +58,29 @@ declare interface SavedMessage {
   role: "user" | "system" | "assistant";
   content: string;
 }
+
+declare interface SessionConversationType {
+  sessionId: string;
+  agentName: string;
+  patientEmail: string;
+  timestamp: Date;
+  // messages:
+  //   | {
+  //       role: string;
+  //       content: string;
+  //     }[]
+  //   | null;
+  chiefComplaint: string | null;
+  conversationSummary: string | null;
+}
+
+declare interface SessionReportType {
+  diagnoses: string[] | null;
+  symptomsReported: string[] | null;
+  symptomDuration: string | null;
+  symptomSeverity: string | null;
+  medicationsMentioned: string[] | null;
+  medicationsRecommended: string[] | null;
+  treatmentPlanRecommendations: string[] | null;
+  additionalNotes: string | null;
+}

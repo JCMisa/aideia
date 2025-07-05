@@ -90,7 +90,7 @@ const doctorImages = [
   "https://i.ibb.co/3m0gVQ4Y/doctor6.png",
 ];
 
-export const sampleDoctors = [
+export const sampleDoctors: DoctorType[] = [
   {
     id: 1,
     name: "Dr. Emily Johnson",

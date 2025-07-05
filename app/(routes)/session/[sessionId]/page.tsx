@@ -1,6 +1,6 @@
 import EmptyState from "@/components/custom/EmptyState";
 import { getSessionChatBySessionId } from "@/lib/actions/sessions";
-import { ClockIcon } from "lucide-react";
+import { CalendarIcon } from "lucide-react";
 import Image from "next/image";
 import AssistantSection from "./_components/AssistantSection";
 import { getCurrentUser } from "@/lib/actions/users";
@@ -133,7 +133,8 @@ const SessionPage = async ({ params }: Params) => {
           </div>
         </div>
         <div className="text-sm max-md:hidden flex items-center gap-2">
-          <ClockIcon className="size-4" /> 00:00
+          <CalendarIcon className="size-4" />{" "}
+          {new Date(sessionChat.createdAt).toLocaleDateString()}
         </div>
       </article>
 
