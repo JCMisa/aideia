@@ -3,7 +3,12 @@
 
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, ListCollapse, MoreHorizontal } from "lucide-react";
+import {
+  ArrowUpDown,
+  ListCollapse,
+  MoreHorizontal,
+  RepeatIcon,
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -67,6 +72,8 @@ export const columns: (
 
       const sessionChatId = data.sessionChatId;
       const owner = data.createdBy;
+      const conversation = data.conversation;
+      const report = data.report;
 
       return (
         <DropdownMenu>
@@ -87,6 +94,14 @@ export const columns: (
                   </DropdownMenuItem>
                 </Link>
                 <DeleteSession sessionId={sessionChatId} />
+                {(!report || !conversation) && (
+                  <Link href={`/session/${sessionChatId}`}>
+                    <DropdownMenuItem>
+                      <RepeatIcon className="h-4 w-4 mr-2" />
+                      Reconsult
+                    </DropdownMenuItem>
+                  </Link>
+                )}
               </>
             )}
           </DropdownMenuContent>

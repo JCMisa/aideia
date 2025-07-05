@@ -15,7 +15,7 @@ export const Users = pgTable("users", {
   name: varchar({ length: 255 }).notNull(),
   email: varchar({ length: 255 }).notNull().unique(),
   image: text("image"),
-  credits: integer(),
+  credits: integer().default(2).notNull(),
   role: varchar("role").default("user").notNull(),
   createdAt: timestamp("createdAt")
     .$defaultFn(() => /* @__PURE__ */ new Date())

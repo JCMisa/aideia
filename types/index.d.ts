@@ -4,7 +4,7 @@ declare interface UserType {
   name: string;
   email: string;
   image?: string | null;
-  credits?: number | null;
+  credits: number;
   role: string;
   createdAt: Date;
   updatedAt: Date;

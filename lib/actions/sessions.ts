@@ -44,7 +44,7 @@ export const getUserSessions = withErrorHandling(async () => {
     .where(eq(SessionChat.createdBy, user.email));
 
   if (!data || data.length === 0) {
-    throw new Error("No Session Available For This User");
+    return [];
   }
 
   return data;

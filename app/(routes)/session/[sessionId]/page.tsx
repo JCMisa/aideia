@@ -1,9 +1,10 @@
 import EmptyState from "@/components/custom/EmptyState";
 import { getSessionChatBySessionId } from "@/lib/actions/sessions";
-import { CalendarIcon } from "lucide-react";
+import { ArrowLeftIcon, CalendarIcon } from "lucide-react";
 import Image from "next/image";
 import AssistantSection from "./_components/AssistantSection";
 import { getCurrentUser } from "@/lib/actions/users";
+import Link from "next/link";
 
 const SessionPage = async ({ params }: Params) => {
   let sessionId: string | undefined;
@@ -84,6 +85,9 @@ const SessionPage = async ({ params }: Params) => {
 
   return (
     <main className="flex flex-col space-y-4">
+      <Link href={"/dashboard"} className="flex items-center gap-1 text-xs">
+        <ArrowLeftIcon className="size-4" /> Go to dashboard
+      </Link>
       <article className="flex rounded-lg shadow-lg justify-between p-6 max-md:flex-col">
         <div className="flex items-start gap-2">
           {/* Image container with fixed size and no shrink/grow */}
