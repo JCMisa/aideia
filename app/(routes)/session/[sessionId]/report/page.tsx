@@ -79,6 +79,18 @@ const SessionReportPage = async ({ params }: Params) => {
     );
   }
 
+  if (user.email !== session.createdBy && user.role !== "admin") {
+    return (
+      <div>
+        <EmptyState
+          icon="https://cdn-icons-png.flaticon.com/512/9233/9233346.png"
+          title="Access Denied"
+          description="You do not have permission to view this session report. Only the session creator can access this report."
+        />
+      </div>
+    );
+  }
+
   if (!session.conversation || !session.report) {
     return (
       <div>

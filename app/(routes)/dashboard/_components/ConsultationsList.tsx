@@ -8,7 +8,7 @@ const ConsultationsList = ({
   consultationsList,
 }: {
   user: UserType;
-  consultationsList: ConsultationType[];
+  consultationsList: SessionChatType[];
 }) => {
   return (
     <div className="w-full flex flex-col space-y-4">
@@ -31,7 +31,7 @@ const ConsultationsList = ({
             columns={columns}
             data={consultationsList ?? []}
             showCreate={user.role === "admin"}
-            currentUserRole={user.role}
+            currentUser={user}
           />
         )}
       </div>

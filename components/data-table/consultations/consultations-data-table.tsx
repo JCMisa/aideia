@@ -30,12 +30,12 @@ import Link from "next/link";
 import { PlusCircleIcon } from "lucide-react";
 
 interface DataTableProps<TData, TValue> {
-  columns: (currentUserRole: string | undefined) => ColumnDef<TData, TValue>[];
+  columns: (currentUser: UserType | undefined) => ColumnDef<TData, TValue>[];
   data: TData[];
   // query1?: string;
   showCreate?: boolean;
   additionalClassName?: string;
-  currentUserRole?: string;
+  currentUser?: UserType;
 }
 
 export function DataTable<TData, TValue>({
@@ -44,7 +44,7 @@ export function DataTable<TData, TValue>({
   // query1,
   showCreate = false,
   additionalClassName = "",
-  currentUserRole,
+  currentUser,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   // const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -54,8 +54,8 @@ export function DataTable<TData, TValue>({
 
   // Generate the columns using the provided function and currentUserRole
   const computedColumns = React.useMemo(
-    () => columnsDef(currentUserRole),
-    [columnsDef, currentUserRole]
+    () => columnsDef(currentUser),
+    [columnsDef, currentUser]
   );
 
   const table = useReactTable({

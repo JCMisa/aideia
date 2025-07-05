@@ -4,19 +4,17 @@ import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-export default function Error({
-  error,
-  reset,
-}: {
-  error: Error;
-  reset: () => void;
-}) {
+export default function Error({ error }: { error: Error }) {
   const router = useRouter();
 
   useEffect(() => {
     // Optionally log error to an error reporting service
     console.error(error);
   }, [error]);
+
+  const handleReset = () => {
+    window.location.reload();
+  };
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-background px-4">
@@ -45,15 +43,19 @@ export default function Error({
             Please try again or return back to where you left.
           </p>
         </div>
-        <div className="flex gap-2 mt-4 w-full">
+        <div className="flex flex-col gap-2 mt-4 w-full">
           <Button
-            className="w-full"
+            className="w-full cursor-pointer"
             variant="default"
             onClick={() => router.back()}
           >
             Go Home
           </Button>
-          <Button className="w-full" variant="outline" onClick={() => reset()}>
+          <Button
+            className="w-full cursor-pointer"
+            variant="outline"
+            onClick={handleReset}
+          >
             Try Again
           </Button>
         </div>

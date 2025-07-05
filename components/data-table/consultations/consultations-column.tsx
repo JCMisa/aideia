@@ -7,7 +7,7 @@ import {
   ArrowUpDown,
   ListCollapse,
   MoreHorizontal,
-  // Pencil,
+  RepeatIcon,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -16,14 +16,12 @@ import {
   DropdownMenuTrigger,
 } from "../../ui/dropdown-menu";
 import Link from "next/link";
-import Image from "next/image";
-import { Badge } from "../../ui/badge";
 
 export const columns: (
-  currentUserRole: string | undefined
-) => ColumnDef<any>[] = (currentUserRole) => [
+  currentUser: UserType | undefined
+) => ColumnDef<any>[] = (currentUser) => [
   {
-    accessorKey: "imageUrl",
+    accessorKey: "notes",
     header: ({ column }) => {
       return (
         <Button
@@ -31,166 +29,20 @@ export const columns: (
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           className="hover:bg-transparent hover:text-white"
         >
-          Profile
+          Notes
           <ArrowUpDown className="ml-2 h-4 w-4 text-white" />
         </Button>
       );
     },
     cell: ({ row }) => {
-      const imageUrl = (row.getValue("imageUrl") as string) || "/empty-img.png";
-
-      return imageUrl ? (
-        <Image
-          src={imageUrl}
-          loading="lazy"
-          placeholder="blur"
-          blurDataURL="/blur.jpg"
-          alt="avatar"
-          width={1000}
-          height={1000}
-          className="w-10 h-10 rounded-full"
-        />
+      const notes = row.getValue("notes") as string;
+      return notes ? (
+        <div className="max-w-[200px] truncate" title={notes}>
+          {notes}
+        </div>
       ) : (
-        <Image
-          src="/empty-img.png"
-          loading="lazy"
-          placeholder="blur"
-          blurDataURL="/blur.jpg"
-          alt="avatar"
-          width={1000}
-          height={1000}
-          className="w-10 h-10 rounded-full"
-        />
+        <span className="text-muted-foreground">No notes</span>
       );
-    },
-  },
-  {
-    accessorKey: "consultationId",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="hover:bg-transparent hover:text-white"
-        >
-          ID
-          <ArrowUpDown className="ml-2 h-4 w-4 text-white" />
-        </Button>
-      );
-    },
-  },
-  {
-    accessorKey: "userId",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="hover:bg-transparent hover:text-white"
-        >
-          User ID
-          <ArrowUpDown className="ml-2 h-4 w-4 text-white" />
-        </Button>
-      );
-    },
-  },
-  {
-    accessorKey: "name",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="hover:bg-transparent hover:text-white"
-        >
-          UserName
-          <ArrowUpDown className="ml-2 h-4 w-4 text-white" />
-        </Button>
-      );
-    },
-  },
-  {
-    accessorKey: "email",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="hover:bg-transparent hover:text-white"
-        >
-          User Email
-          <ArrowUpDown className="ml-2 h-4 w-4 text-white" />
-        </Button>
-      );
-    },
-  },
-  {
-    accessorKey: "doctorName",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="hover:bg-transparent hover:text-white"
-        >
-          Doctor Name
-          <ArrowUpDown className="ml-2 h-4 w-4 text-white" />
-        </Button>
-      );
-    },
-  },
-  {
-    accessorKey: "conditionName",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="hover:bg-transparent hover:text-white"
-        >
-          Condition
-          <ArrowUpDown className="ml-2 h-4 w-4 text-white" />
-        </Button>
-      );
-    },
-  },
-  {
-    accessorKey: "conditionSeverity",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="hover:bg-transparent hover:text-white"
-        >
-          Severity
-          <ArrowUpDown className="ml-2 h-4 w-4 text-white" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => {
-      const severity = (
-        row.getValue("conditionSeverity") as string
-      ).toLowerCase();
-
-      if (severity === "mild")
-        return (
-          <Badge className="bg-yellow-500 hover:bg-yellow-600 transition-all">
-            Mild
-          </Badge>
-        );
-      if (severity === "moderate")
-        return (
-          <Badge className="bg-orange-500 hover:bg-orange-600 transition-all">
-            Moderate
-          </Badge>
-        );
-      if (severity === "severe")
-        return (
-          <Badge className="bg-red-500 hover:bg-red-600 transition-all">
-            Severe
-          </Badge>
-        );
     },
   },
   {
@@ -202,16 +54,23 @@ export const columns: (
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           className="hover:bg-transparent hover:text-white"
         >
-          Consultation Date
+          Created At
           <ArrowUpDown className="ml-2 h-4 w-4 text-white" />
         </Button>
       );
+    },
+    cell: ({ row }) => {
+      const date = row.getValue("createdAt") as Date;
+      return new Date(date).toLocaleDateString();
     },
   },
   {
     id: "actions",
     cell: ({ row }) => {
-      const consultationId = row.getValue("consultationId");
+      const data = row.original;
+
+      const sessionChatId = data.sessionChatId;
+      const owner = data.createdBy;
 
       return (
         <DropdownMenu>
@@ -222,18 +81,23 @@ export const columns: (
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            {currentUserRole === "admin" && (
+            {(currentUser?.role === "admin" ||
+              currentUser?.email === owner) && (
               <>
-                {/* <EditPatient consultationId={consultationId as string} />
-                <DeletePatient consultationId={consultationId as string} /> */}
+                <Link href={`/session/${sessionChatId}`}>
+                  <DropdownMenuItem>
+                    <RepeatIcon className="h-4 w-4 mr-2" />
+                    Reconsult
+                  </DropdownMenuItem>
+                </Link>
+                <Link href={`/session/${sessionChatId}/report`}>
+                  <DropdownMenuItem>
+                    <ListCollapse className="h-4 w-4 mr-2" />
+                    Details
+                  </DropdownMenuItem>
+                </Link>
               </>
             )}
-            <Link href={`/consultation/${consultationId}`}>
-              <DropdownMenuItem>
-                <ListCollapse className="h-4 w-4 mr-2" />
-                Details
-              </DropdownMenuItem>
-            </Link>
           </DropdownMenuContent>
         </DropdownMenu>
       );

@@ -1,15 +1,16 @@
 import DashboardDataCards from "./_components/DashboardDataCards";
 import DoctorsList from "./_components/DoctorsList";
-import { sampleConsultation } from "@/constants";
 import { getCurrentUser } from "@/lib/actions/users";
 import { redirect } from "next/navigation";
 import ConsultationsList from "./_components/ConsultationsList";
+import { getUserSessions } from "@/lib/actions/sessions";
 
 const DashboardPage = async () => {
   const user: UserType = await getCurrentUser();
   if (!user) {
     redirect("/sign-in");
   }
+  const userSessions: SessionChatType[] = await getUserSessions();
 
   return (
     <section className="w-full flex flex-col gap-4">
@@ -22,7 +23,7 @@ const DashboardPage = async () => {
           {/* consultations list */}
           <ConsultationsList
             user={user}
-            consultationsList={sampleConsultation}
+            consultationsList={userSessions.length > 0 ? userSessions : []}
           />
           {/* chart */}
         </div>

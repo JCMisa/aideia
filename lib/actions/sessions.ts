@@ -7,6 +7,43 @@ import { eq } from "drizzle-orm";
 import { getCurrentUser } from "./users";
 
 // --------------------------- Server Actions ---------------------------
+export const getAllSessions = withErrorHandling(async () => {
+  // Authenticate user
+  const user = await getCurrentUser();
+  if (!user || !user.email) {
+    throw new Error("Unauthorized");
+  }
+
+  // Query for getting all sessions
+  const data = await db.select().from(SessionChat);
+
+  if (!data || data.length === 0) {
+    throw new Error("No Session Available");
+  }
+
+  return data;
+});
+
+export const getUserSessions = withErrorHandling(async () => {
+  // Authenticate user
+  const user = await getCurrentUser();
+  if (!user || !user.email) {
+    throw new Error("Unauthorized");
+  }
+
+  // Query for getting sessions only for the current logged in user
+  const data = await db
+    .select()
+    .from(SessionChat)
+    .where(eq(SessionChat.createdBy, user.email));
+
+  if (!data || data.length === 0) {
+    throw new Error("No Session Available For This User");
+  }
+
+  return data;
+});
+
 export const getSessionChatBySessionId = withErrorHandling(
   async (sessionId: string) => {
     // Validate sessionId
@@ -20,7 +57,7 @@ export const getSessionChatBySessionId = withErrorHandling(
       throw new Error("Unauthorized");
     }
 
-    // Query for the session chat
+    // Query for getting session based on passed sessionId
     const data = await db
       .select()
       .from(SessionChat)
