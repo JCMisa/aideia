@@ -1,13 +1,15 @@
 import { HoverEffect } from "@/components/ui/card-hover-effect";
+import { getUserSessions } from "@/lib/actions/sessions";
 
-const DashboardDataCards = () => {
+const DashboardDataCards = async () => {
+  const consultations = await getUserSessions();
   const projects = [
     {
-      title: "Consultations",
-      value: 0,
+      title: "My Consultations",
+      value: consultations.length || 0,
       description:
-        "A technology company that builds economic infrastructure for the internet.",
-      link: "https://stripe.com",
+        "Track and manage all your Aidea consultations in one place. View your medical history, treatment plans, and ongoing care.",
+      link: "/session/history",
     },
     {
       title: "Netflix",

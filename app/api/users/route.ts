@@ -25,7 +25,7 @@ export async function POST() {
         name: user.fullName || user.firstName || "Unknown",
         email: user.primaryEmailAddress?.emailAddress || "",
         image: user.imageUrl || null,
-        credits: 0,
+        credits: 2,
         role: "user",
         createdAt: now,
         updatedAt: now,

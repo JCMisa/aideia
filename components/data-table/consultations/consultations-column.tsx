@@ -3,12 +3,7 @@
 
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
-import {
-  ArrowUpDown,
-  ListCollapse,
-  MoreHorizontal,
-  RepeatIcon,
-} from "lucide-react";
+import { ArrowUpDown, ListCollapse, MoreHorizontal } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "../../ui/dropdown-menu";
 import Link from "next/link";
+import DeleteSession from "@/app/(routes)/session/[sessionId]/_components/DeleteSession";
 
 export const columns: (
   currentUser: UserType | undefined
@@ -84,18 +80,13 @@ export const columns: (
             {(currentUser?.role === "admin" ||
               currentUser?.email === owner) && (
               <>
-                <Link href={`/session/${sessionChatId}`}>
-                  <DropdownMenuItem>
-                    <RepeatIcon className="h-4 w-4 mr-2" />
-                    Reconsult
-                  </DropdownMenuItem>
-                </Link>
                 <Link href={`/session/${sessionChatId}/report`}>
                   <DropdownMenuItem>
                     <ListCollapse className="h-4 w-4 mr-2" />
                     Details
                   </DropdownMenuItem>
                 </Link>
+                <DeleteSession sessionId={sessionChatId} />
               </>
             )}
           </DropdownMenuContent>

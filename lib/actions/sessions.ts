@@ -5,6 +5,12 @@ import { withErrorHandling } from "../utils";
 import { SessionChat } from "@/config/schema";
 import { eq } from "drizzle-orm";
 import { getCurrentUser } from "./users";
+import { revalidatePath } from "next/cache";
+
+// --------------------------- Helper Functions ---------------------------
+const revalidatePaths = (paths: string[]) => {
+  paths.forEach((path) => revalidatePath(path));
+};
 
 // --------------------------- Server Actions ---------------------------
 export const getAllSessions = withErrorHandling(async () => {
@@ -77,3 +83,28 @@ export const getSessionChatBySessionId = withErrorHandling(
     return sessionChat;
   }
 );
+
+export const deleteSession = withErrorHandling(async (sessionId: string) => {
+  // Authenticate user
+  const user = await getCurrentUser();
+  if (!user || !user.email) {
+    throw new Error("Unauthorized");
+  }
+
+  // check if sessionId is there
+  if (!sessionId || typeof sessionId !== "string") {
+    throw new Error("Session ID could not be found");
+  }
+
+  // Query for getting all sessions
+  const data = await db
+    .delete(SessionChat)
+    .where(eq(SessionChat.sessionChatId, sessionId));
+
+  if (data) {
+    revalidatePaths(["/dashboard", "/session/history"]);
+    return { success: true, message: "Session deleted successfully" };
+  } else {
+    throw new Error("Session could not be deleted");
+  }
+});
