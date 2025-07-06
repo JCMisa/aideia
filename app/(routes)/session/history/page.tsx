@@ -5,11 +5,16 @@ import SessionCard from "@/components/custom/SessionCard";
 import { Button } from "@/components/ui/button";
 import { getUserSessionsWithPagination } from "@/lib/actions/sessions";
 import { getCurrentUser } from "@/lib/actions/users";
+import { auth } from "@clerk/nextjs/server";
 import { StarIcon } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
 const SessionHistory = async ({ searchParams }: SearchParams) => {
+  const { has } = await auth();
+  const isHealthEssentials = has({ plan: "health_essentials" });
+  const isPremiumCare = has({ plan: "premium_care" });
+
   const user: UserType = await getCurrentUser();
 
   if (!user) {
@@ -25,17 +30,19 @@ const SessionHistory = async ({ searchParams }: SearchParams) => {
   return (
     <main className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col min-h-screen pt-12.5 pb-20 gap-9 my-2">
       <div className="w-full flex items-center justify-between gap-4">
-        <Button variant={"outline"} className="flex items-center gap-2">
-          <StarIcon className="size-4 text-yellow-500" /> {user.credits}{" "}
-          remaining
-        </Button>
-        {user.credits > 0 ? (
+        {(user.credits > 0 && !isHealthEssentials && !isPremiumCare) ||
+        isHealthEssentials ||
+        isPremiumCare ? (
           <AddConsultationDialog />
         ) : (
           <Button variant={"secondary"} asChild>
             <Link href={"/pricing"}>Upgrade Plan</Link>
           </Button>
         )}
+        <Button variant={"outline"} className="flex items-center gap-2">
+          <StarIcon className="size-4 text-yellow-500" /> {user.credits}{" "}
+          remaining
+        </Button>
       </div>
 
       {sessions?.length > 0 ? (

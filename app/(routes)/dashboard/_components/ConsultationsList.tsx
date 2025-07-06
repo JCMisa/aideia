@@ -2,15 +2,20 @@ import AddConsultationDialog from "@/components/custom/AddConsultationDialog";
 import EmptyState from "@/components/custom/EmptyState";
 import { columns } from "@/components/data-table/consultations/consultations-column";
 import { DataTable } from "@/components/data-table/consultations/consultations-data-table";
+import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
-const ConsultationsList = ({
+const ConsultationsList = async ({
   user,
   consultationsList,
 }: {
   user: UserType;
   consultationsList: SessionChatType[];
 }) => {
+  const { has } = await auth();
+  const isHealthEssentials = has({ plan: "health_essentials" });
+  const isPremiumCare = has({ plan: "premium_care" });
+
   if (!user) {
     redirect("/sign-in");
   }
@@ -20,7 +25,9 @@ const ConsultationsList = ({
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <h1 className="text-xl font-bold">Consultations List</h1>
 
-        {user.credits > 0 && <AddConsultationDialog />}
+        {((user.credits > 0 && !isHealthEssentials && !isPremiumCare) ||
+          isHealthEssentials ||
+          isPremiumCare) && <AddConsultationDialog />}
       </div>
       <div>
         {consultationsList.length === 0 ? (
