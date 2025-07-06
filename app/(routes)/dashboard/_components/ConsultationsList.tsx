@@ -18,7 +18,7 @@ const ConsultationsList = ({
   return (
     <div className="w-full flex flex-col space-y-4">
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-        <h1 className="text-4xl font-bold">Consultations List</h1>
+        <h1 className="text-xl font-bold">Consultations List</h1>
 
         {user.credits > 0 && <AddConsultationDialog />}
       </div>

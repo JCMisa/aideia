@@ -155,3 +155,130 @@ export const deleteSession = withErrorHandling(async (sessionId: string) => {
     throw new Error("Session could not be deleted");
   }
 });
+
+// --------------------------- Chart Data Actions ---------------------------
+export const getSessionsByMonth = withErrorHandling(async (year: number) => {
+  // Authenticate user
+  const user = await getCurrentUser();
+  if (!user || !user.email) {
+    throw new Error("Unauthorized");
+  }
+
+  console.log("Fetching sessions for user:", user.email, "year:", year);
+
+  // First, let's see what sessions exist for this user
+  const allUserSessions = await db
+    .select({
+      id: SessionChat.id,
+      createdAt: SessionChat.createdAt,
+      createdBy: SessionChat.createdBy,
+    })
+    .from(SessionChat)
+    .where(eq(SessionChat.createdBy, user.email));
+
+  console.log("All user sessions:", allUserSessions);
+
+  // Get sessions for the specified year, grouped by month
+  const sessionsByMonth = await db
+    .select({
+      month: sql<number>`EXTRACT(MONTH FROM ${SessionChat.createdAt})`,
+      year: sql<number>`EXTRACT(YEAR FROM ${SessionChat.createdAt})`,
+      count: sql<number>`COUNT(*)`,
+    })
+    .from(SessionChat)
+    .where(
+      sql`${SessionChat.createdBy} = ${user.email} AND EXTRACT(YEAR FROM ${SessionChat.createdAt}) = ${year}`
+    )
+    .groupBy(
+      sql`EXTRACT(MONTH FROM ${SessionChat.createdAt}), EXTRACT(YEAR FROM ${SessionChat.createdAt})`
+    )
+    .orderBy(sql`EXTRACT(MONTH FROM ${SessionChat.createdAt})`);
+
+  console.log("Sessions by month with year:", sessionsByMonth);
+
+  // Alternative approach: Get all sessions and filter in JavaScript
+  const allSessionsForYear = await db
+    .select({
+      id: SessionChat.id,
+      createdAt: SessionChat.createdAt,
+    })
+    .from(SessionChat)
+    .where(eq(SessionChat.createdBy, user.email));
+
+  console.log("All sessions for user:", allSessionsForYear);
+
+  // Filter sessions for the specified year and group by month
+  const sessionsInYear = allSessionsForYear.filter((session) => {
+    const sessionYear = new Date(session.createdAt).getFullYear();
+    return sessionYear === year;
+  });
+
+  console.log("Sessions in year", year, ":", sessionsInYear);
+
+  // Group by month manually
+  const manualGrouping = Array.from({ length: 12 }, (_, index) => {
+    const monthNumber = index + 1;
+    const monthSessions = sessionsInYear.filter((session) => {
+      const sessionMonth = new Date(session.createdAt).getMonth() + 1; // getMonth() returns 0-11
+      return sessionMonth === monthNumber;
+    });
+
+    return {
+      month: monthNumber,
+      count: monthSessions.length,
+    };
+  });
+
+  console.log("Manual grouping result:", manualGrouping);
+
+  // Create a complete year array with all months (1-12)
+  const monthNames = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+
+  // Use manual grouping instead of SQL grouping for more reliability
+  const monthlyData = Array.from({ length: 12 }, (_, index) => {
+    const monthNumber = index + 1;
+    const monthData = manualGrouping.find((s) => s.month === monthNumber);
+
+    return {
+      month: monthNames[index],
+      sessions: monthData ? monthData.count : 0,
+    };
+  });
+
+  console.log("Final monthly data:", monthlyData);
+
+  return monthlyData;
+});
+
+export const getAvailableYears = withErrorHandling(async () => {
+  // Authenticate user
+  const user = await getCurrentUser();
+  if (!user || !user.email) {
+    throw new Error("Unauthorized");
+  }
+
+  // Get all years that have sessions for the current user
+  const years = await db
+    .select({
+      year: sql<number>`EXTRACT(YEAR FROM ${SessionChat.createdAt})`,
+    })
+    .from(SessionChat)
+    .where(eq(SessionChat.createdBy, user.email))
+    .groupBy(sql`EXTRACT(YEAR FROM ${SessionChat.createdAt})`)
+    .orderBy(sql`EXTRACT(YEAR FROM ${SessionChat.createdAt}) DESC`);
+
+  return years.map((y) => Number(y.year));
+});

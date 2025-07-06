@@ -1,8 +1,11 @@
 import { HoverEffect } from "@/components/ui/card-hover-effect";
 import { getUserSessions } from "@/lib/actions/sessions";
+import { getUserDashboardStats } from "@/lib/actions/users";
 
 const DashboardDataCards = async () => {
   const consultations = await getUserSessions();
+  const userStats = await getUserDashboardStats();
+
   const projects = [
     {
       title: "My Consultations",
@@ -12,18 +15,19 @@ const DashboardDataCards = async () => {
       link: "/session/history",
     },
     {
-      title: "Netflix",
-      value: 0,
-      description:
-        "A streaming service that offers a wide variety of award-winning TV shows, movies, anime, documentaries, and more on thousands of internet-connected devices.",
-      link: "https://netflix.com",
+      title: "Recent Activity",
+      value: userStats.recentSessionsCount,
+      description: `You've had ${userStats.recentSessionsCount} consultations in the last 7 days. Stay on top of your health with regular check-ins.`,
+      link: "/session/history",
     },
     {
-      title: "Google",
-      value: 0,
+      title: "Top Specialist",
+      value: userStats.topSpecialists[0]?.count || 0,
       description:
-        "A multinational technology company that specializes in Internet-related services and products.",
-      link: "https://google.com",
+        userStats.topSpecialists.length > 0
+          ? `You've consulted ${userStats.topSpecialists[0].name} ${userStats.topSpecialists[0].count} times. Your most trusted specialist for personalized care.`
+          : "Start your first consultation to see your preferred specialists.",
+      link: "/session/history",
     },
   ];
 

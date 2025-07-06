@@ -2,8 +2,8 @@
 
 import { db } from "@/config/db";
 import { withErrorHandling } from "../utils";
-import { Users } from "@/config/schema";
-import { eq } from "drizzle-orm";
+import { Users, SessionChat } from "@/config/schema";
+import { eq, sql, desc, count } from "drizzle-orm";
 import { auth } from "@clerk/nextjs/server";
 
 // --------------------------- Helper Functions ---------------------------
@@ -36,4 +36,56 @@ export const getUserByEmail = withErrorHandling(async (email: string) => {
   }
 
   return data[0];
+});
+
+// --------------------------- Dashboard Statistics ---------------------------
+export const getUserDashboardStats = withErrorHandling(async () => {
+  const user = await getCurrentUser();
+  if (!user?.email) {
+    throw new Error("Unauthorized");
+  }
+
+  // Get user's remaining credits
+  const remainingCredits = user.credits;
+
+  // Get sessions from last 7 days
+  const sevenDaysAgo = new Date();
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+  const recentSessions = await db
+    .select()
+    .from(SessionChat)
+    .where(
+      sql`${SessionChat.createdBy} = ${user.email} AND ${SessionChat.createdAt} >= ${sevenDaysAgo}`
+    );
+
+  // Get most consulted specialists (top 3)
+  const specialistStats = await db
+    .select({
+      name: sql<string>`${SessionChat.selectedDoctor}->>'name'`,
+      count: count(),
+    })
+    .from(SessionChat)
+    .where(eq(SessionChat.createdBy, user.email))
+    .groupBy(sql`${SessionChat.selectedDoctor}->>'name'`)
+    .orderBy(desc(count()))
+    .limit(3);
+
+  // Get last consultation date
+  const lastConsultation = await db
+    .select({ createdAt: SessionChat.createdAt })
+    .from(SessionChat)
+    .where(eq(SessionChat.createdBy, user.email))
+    .orderBy(desc(SessionChat.createdAt))
+    .limit(1);
+
+  return {
+    remainingCredits,
+    recentSessionsCount: recentSessions.length,
+    topSpecialists: specialistStats.map((stat) => ({
+      name: stat.name || "Unknown",
+      count: Number(stat.count),
+    })),
+    lastConsultationDate: lastConsultation[0]?.createdAt || null,
+  };
 });
