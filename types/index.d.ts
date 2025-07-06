@@ -84,3 +84,7 @@ declare interface SessionReportType {
   treatmentPlanRecommendations: string[] | null;
   additionalNotes: string | null;
 }
+
+declare interface SearchParams {
+  searchParams: Promise<Record<string, string | undefined>>;
+}

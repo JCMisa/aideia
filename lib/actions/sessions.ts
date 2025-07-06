@@ -2,8 +2,8 @@
 
 import { db } from "@/config/db";
 import { withErrorHandling } from "../utils";
-import { SessionChat } from "@/config/schema";
-import { eq } from "drizzle-orm";
+import { SessionChat, Users } from "@/config/schema";
+import { eq, sql } from "drizzle-orm";
 import { getCurrentUser } from "./users";
 import { revalidatePath } from "next/cache";
 
@@ -49,6 +49,53 @@ export const getUserSessions = withErrorHandling(async () => {
 
   return data;
 });
+
+const getSessionsWithUser = () =>
+  db
+    .select({
+      sessionChat: SessionChat,
+      user: {
+        id: Users.clerkId,
+        name: Users.name,
+        email: Users.email,
+        image: Users.image,
+        credits: Users.credits,
+      },
+    })
+    .from(SessionChat)
+    .leftJoin(Users, eq(SessionChat.createdBy, Users.email));
+
+export const getUserSessionsWithPagination = withErrorHandling(
+  async (pageNumber: number = 1, pageSize: number = 8) => {
+    const user = await getCurrentUser();
+    const userEmail = user?.email;
+
+    // Count total for pagination
+    const [{ totalCount }] = await db
+      .select({ totalCount: sql<number>`count(*)` })
+      .from(SessionChat)
+      .where(eq(SessionChat.createdBy, userEmail));
+    const totalSessions = Number(totalCount || 0);
+    const totalPages = Math.ceil(totalSessions / pageSize);
+
+    // Fetch paginated, sorted results
+    const sessionRecords = await getSessionsWithUser()
+      .where(eq(SessionChat.createdBy, userEmail))
+      .orderBy(sql`${SessionChat.createdAt} DESC`)
+      .limit(pageSize)
+      .offset((pageNumber - 1) * pageSize);
+
+    return {
+      sessions: sessionRecords,
+      pagination: {
+        currentPage: pageNumber,
+        totalPages,
+        totalSessions,
+        pageSize,
+      },
+    };
+  }
+);
 
 export const getSessionChatBySessionId = withErrorHandling(
   async (sessionId: string) => {
