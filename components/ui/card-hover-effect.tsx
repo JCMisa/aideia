@@ -11,7 +11,7 @@ export const HoverEffect = ({
 }: {
   items: {
     title: string;
-    value: number;
+    value: number | string;
     description: string;
     link: string;
   }[];

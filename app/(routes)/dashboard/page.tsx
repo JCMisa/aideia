@@ -7,15 +7,26 @@ import { getUserSessions } from "@/lib/actions/sessions";
 import ConsultationsChart from "./_components/ConsultationsChart";
 
 const DashboardPage = async () => {
-  const user: UserType = await getCurrentUser();
+  const [user, userSessionsRes] = await Promise.all([
+    getCurrentUser(),
+    getUserSessions(),
+  ]);
+
   if (!user) {
     redirect("/sign-in");
   }
-  const userSessions: SessionChatType[] = await getUserSessions();
+
+  let userSessions: SessionChatType[] = [];
+  if (!userSessionsRes) {
+    userSessions = [];
+  }
+  userSessions = userSessionsRes;
 
   return (
     <section className="w-full flex flex-col gap-4">
-      <DashboardDataCards />
+      <DashboardDataCards
+        consultations={userSessions.length > 0 ? userSessions : []}
+      />
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full">
         <div className="w-full flex flex-col gap-4">
           {/* consultations list */}
